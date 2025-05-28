@@ -1,12 +1,13 @@
 from turtle import Screen, Turtle
 from random import randint, choice
+import time
 
 leaderboard = {}
 
 def run_race():
     global leaderboard
     src = Screen()
-    src.setup(width=600, height=500)
+    src.setup(width=650, height=500)
     src.title("Turtle Racing Game")
 
     colorList = ["red", "orange", "chartreuse", "dark cyan", "dark blue", "dark magenta", "light coral", "light green", "deep pink", "sandy brown"]
@@ -60,6 +61,18 @@ def run_race():
 
     race_on = True
     winner = None
+
+    # Animated start countdown
+    countdown_turtle = Turtle()
+    countdown_turtle.hideturtle()
+    countdown_turtle.penup()
+    countdown_turtle.goto(0, 0)
+    for msg in ["3", "2", "1", "Go!"]:
+        countdown_turtle.clear()
+        countdown_turtle.write(msg, align="center", font=("Arial", 36, "bold"))
+        src.update()
+        time.sleep(0.6)  # Real pause for 0.6 seconds
+    countdown_turtle.clear()
 
     while race_on:
         for idx, t in enumerate(tur_obj):
