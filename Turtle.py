@@ -71,6 +71,35 @@ def run_race():
                 break
 
     # Announce result on the screen
+    # Animated celebration for the winner
+    for t in tur_obj:
+        if t.pencolor() == winner:
+            # Spin and jump
+            for _ in range(12):
+                t.right(30)
+                t.penup()
+                t.forward(10)
+                t.pendown()
+                t.backward(10)
+            # Victory lap (small circle)
+            t.penup()
+            t.speed(3)
+            t.pendown()
+            t.circle(30)
+            # Firework effect (draw stars)
+            t.penup()
+            t.goto(t.xcor(), t.ycor() + 40)
+            t.pendown()
+            t.pensize(2)
+            t.pencolor("gold")
+            for _ in range(8):
+                t.forward(30)
+                t.backward(30)
+                t.right(45)
+            t.pensize(1)
+            t.pencolor(winner)
+            break
+
     result_turtle = Turtle()
     result_turtle.hideturtle()
     result_turtle.penup()
