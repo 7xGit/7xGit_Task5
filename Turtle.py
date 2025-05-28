@@ -29,23 +29,43 @@ def run_race():
         src.textinput(title="Invalid Color", prompt=f"Please enter one of these colors: {', '.join(available_colors)}. Press OK to try again.")
 
     tur_obj = []
+    progress_labels = []
     start_y = -((tn - 1) * 25)
+    start_x = -280
+    finish_x = 280
+
     for i in range(tn):
         t = Turtle()
         t.shape("turtle")
         t.color(available_colors[i])
         t.penup()
-        t.goto(-280, start_y + i * 50)
+        t.goto(start_x, start_y + i * 50)
         t.speed(1)
         tur_obj.append(t)
+
+        # Progress label above each turtle
+        label = Turtle()
+        label.hideturtle()
+        label.penup()
+        label.goto(start_x, start_y + i * 50 + 20)
+        label.write("0%", align="center", font=("Arial", 10, "normal"))
+        progress_labels.append(label)
 
     race_on = True
     winner = None
 
-    while race_on:   
-        for t in tur_obj:
-            t.forward(randint(15, 25))
-            if t.xcor() > 280:
+    while race_on:
+        for idx, t in enumerate(tur_obj):
+            move = randint(15, 25)
+            t.forward(move)
+            # Update progress bar
+            progress = int(((t.xcor() - start_x) / (finish_x - start_x)) * 100)
+            progress = min(progress, 100)
+            progress_labels[idx].clear()
+            progress_labels[idx].goto(t.xcor(), t.ycor() + 20)
+            progress_labels[idx].color(t.pencolor())  # Match label color with turtle
+            progress_labels[idx].write(f"{progress}%", align="center", font=("Arial", 10, "normal"))
+            if t.xcor() > finish_x:
                 winner = t.pencolor()
                 race_on = False
                 break
@@ -65,8 +85,8 @@ def run_race():
 if __name__ == "__main__":
     while True:
         src = run_race()
-        again = src.textinput(title="Play Again?", prompt="Do you want to play again? (yes/no)").strip().lower()
-        if again not in ("yes", "y"):
+        again = src.textinput(title="Play Again?", prompt="Do you want to play again? (yes/no)")
+        if not again or again.strip().lower() not in ("yes", "y"):
             src.bye()
             break
         src.clearscreen()
