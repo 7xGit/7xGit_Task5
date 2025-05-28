@@ -1,7 +1,10 @@
 from turtle import Screen, Turtle
 from random import randint
 
+leaderboard = {}
+
 def run_race():
+    global leaderboard
     src = Screen()
     src.setup(width=600, height=500)
     src.title("Turtle Racing Game")
@@ -70,6 +73,12 @@ def run_race():
                 race_on = False
                 break
 
+    # Update leaderboard
+    if winner in leaderboard:
+        leaderboard[winner] += 1
+    else:
+        leaderboard[winner] = 1
+
     # Announce result on the screen
     # Animated celebration for the winner
     for t in tur_obj:
@@ -108,6 +117,13 @@ def run_race():
         result_turtle.write(f"You win! The {winner} turtle won!", align="center", font=("Arial", 18, "bold"))
     else:
         result_turtle.write(f"You lose! The {winner} turtle won!", align="center", font=("Arial", 18, "bold"))
+
+    # Show leaderboard
+    result_turtle.goto(0, 160)
+    leaderboard_str = "Leaderboard:\n" + "\n".join(
+        f"{color}: {count} win(s)" for color, count in sorted(leaderboard.items(), key=lambda x: -x[1])
+    )
+    result_turtle.write(leaderboard_str, align="center", font=("Arial", 14, "normal"))
 
     return src
 
