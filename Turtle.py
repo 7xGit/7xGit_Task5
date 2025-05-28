@@ -1,5 +1,5 @@
 from turtle import Screen, Turtle
-from random import randint
+from random import randint, choice
 
 leaderboard = {}
 
@@ -54,12 +54,35 @@ def run_race():
         label.write("0%", align="center", font=("Arial", 10, "normal"))
         progress_labels.append(label)
 
+    # Choose one turtle for the power-up this race
+    powerup_idx = randint(0, tn - 1)
+    powerup_used = False
+
     race_on = True
     winner = None
 
     while race_on:
         for idx, t in enumerate(tur_obj):
             move = randint(15, 25)
+            # Power-up logic: only for the chosen turtle, only once, at halfway
+            if idx == powerup_idx and not powerup_used and t.xcor() - start_x > (finish_x - start_x) // 2:
+                move += 60  # Big boost!
+                powerup_used = True
+                # Show power-up message above the turtle
+                pu_label = Turtle()
+                pu_label.hideturtle()
+                pu_label.penup()
+                pu_label.goto(t.xcor(), t.ycor() + 40)
+                pu_label.color(t.pencolor())
+                pu_label.write("POWER-UP!", align="center", font=("Arial", 12, "bold"))
+
+                def clear_powerup(label=pu_label):
+                    label.clear()
+
+                # Schedule the message to clear after 4500 milliseconds (4.5 seconds)
+                t.getscreen().ontimer(clear_powerup, 4500)
+
+
             t.forward(move)
             # Update progress bar
             progress = int(((t.xcor() - start_x) / (finish_x - start_x)) * 100)
@@ -118,8 +141,8 @@ def run_race():
     else:
         result_turtle.write(f"You lose! The {winner} turtle won!", align="center", font=("Arial", 18, "bold"))
 
-    # Show leaderboard
-    result_turtle.goto(0, 160)
+    # Show leaderboard lower to avoid overlap
+    result_turtle.goto(0, 140)
     leaderboard_str = "Leaderboard:\n" + "\n".join(
         f"{color}: {count} win(s)" for color, count in sorted(leaderboard.items(), key=lambda x: -x[1])
     )
