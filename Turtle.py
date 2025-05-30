@@ -25,7 +25,8 @@ for i in range(tn):
         t.speed(1)
     tur_obj.append(t)
 
-while bet:    
+race_on=True
+while race_on:    
     shuffle(tur_obj)
     for i in tur_obj:
         distance = randint(15, 25)
@@ -34,9 +35,8 @@ while bet:
         if i.xcor() > 280:
             if i.pencolor() == bet:
                 print(f"You win with {i.pencolor()}!")
-                bet = 0
             else:
                 print(f"You lose! Winning color is {i.pencolor()}.")
-                bet = 0
+            race_on=False
         
 src.exitonclick()
