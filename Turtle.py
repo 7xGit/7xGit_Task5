@@ -22,14 +22,17 @@ for i in range(tn):
     else:
         t.penup()
         t.goto(-280, i * 50)
-        t.speed(1)
     tur_obj.append(t)
 
 while bet:    
     shuffle(tur_obj)
     for i in tur_obj:
-        distance = randint(15, 25)
+        leader_x = max(t.xcor() for t in tur_obj)
+        bias = int((leader_x - i.xcor()) // 100)
+        distance = randint(15 + bias, 25 + bias)
         i.forward(distance)
+        src.update()
+
 
         if i.xcor() > 280:
             if i.pencolor() == bet:
